@@ -19,33 +19,33 @@ enum Token {
 
 //лексема состоит из двух частей: значения, определяющего вид лексемы tok,
 //и (если необходимо)  значения лексемы - number_value.
-struct symbol {
+struct Symbol {
     Token tok;
     double number_value;
 };
 
 
-double sumsub(char*& text);
-double muldiv(char*& text, symbol& curr_symbol);
-double init(char*& text, symbol& curr_symbol);
-symbol getToken(char*& text, symbol& curr_symbol);
+double Calc(const char*& text);
+double MulDiv(const char*& text, Symbol& curr_Symbol);
+double Init(const char*& text, Symbol& curr_Symbol);
+Symbol getToken(const char*& text, Symbol& curr_Symbol);
 
 
 
 //обрабатывает сложение и вычитание
-double sumsub(char*& text) {
-    symbol curr_symbol;
-    getToken(text, curr_symbol);
-    double left = muldiv(text, curr_symbol);
+double Calc(const char*& text) {
+    Symbol curr_Symbol;
+    getToken(text, curr_Symbol);
+    double left = MulDiv(text, curr_Symbol);
     while (1) {
-        switch (curr_symbol.tok) {
+        switch (curr_Symbol.tok) {
             case Token::Plus:
-                getToken(text, curr_symbol);
-                left += muldiv(text, curr_symbol);
+                getToken(text, curr_Symbol);
+                left += MulDiv(text, curr_Symbol);
                 break;
             case Token::Minus:
-                getToken(text, curr_symbol);
-                left -= muldiv(text, curr_symbol);
+                getToken(text, curr_Symbol);
+                left -= MulDiv(text, curr_Symbol);
                 break;
             default:
                 return left;
@@ -55,19 +55,19 @@ double sumsub(char*& text) {
 }
 
 //обрабатывает умножение и деление
-double muldiv(char*& text, symbol& curr_symbol) {
-    double left = init(text, curr_symbol);
+double MulDiv(const char*& text, Symbol& curr_Symbol) {
+    double left = Init(text, curr_Symbol);
     double d;
     while(1) {
-        switch (curr_symbol.tok) {
+        switch (curr_Symbol.tok) {
             case Token::Mul:
-                getToken(text, curr_symbol);
+                getToken(text, curr_Symbol);
                 
-                left *= init(text, curr_symbol);
+                left *= Init(text, curr_Symbol);
                 break;
             case Token::Div:
-                getToken(text, curr_symbol);
-                d = init(text, curr_symbol);
+                getToken(text, curr_Symbol);
+                d = Init(text, curr_Symbol);
                 if (d == 0) {
                     cerr << "zero division" << endl;
                     exit(1);
@@ -81,14 +81,14 @@ double muldiv(char*& text, symbol& curr_symbol) {
 }
 
 // обрабатывает первичные элементы
-double init(char*& text, symbol& curr_symbol) {
-    switch (curr_symbol.tok) {
+double Init(const char*& text, Symbol& curr_Symbol) {
+    switch (curr_Symbol.tok) {
         case Token::Number:
-            getToken(text, curr_symbol);
-            return curr_symbol.number_value;
+            getToken(text, curr_Symbol);
+            return curr_Symbol.number_value;
         case Token::Minus: //унарный минус
-            getToken(text, curr_symbol);
-            return -init(text,curr_symbol);
+            getToken(text, curr_Symbol);
+            return -Init(text,curr_Symbol);
         case Token::End:
             return 1;
         default:
@@ -100,7 +100,7 @@ double init(char*& text, symbol& curr_symbol) {
 }
 
 //получениt очереного токена 
-symbol getToken(char*& text, symbol& curr_symbol) {
+Symbol getToken(const char*& text, Symbol& curr_Symbol) {
     while (const auto c = *text++) {
         switch (c) {
             case ' ': continue;
@@ -108,8 +108,8 @@ symbol getToken(char*& text, symbol& curr_symbol) {
             case '+':
             case '*':
             case '/':
-                curr_symbol.tok = Token(c);
-                return curr_symbol;
+                curr_Symbol.tok = Token(c);
+                return curr_Symbol;
         }
         if (c >= '0' && c <= '9') {
             string tmp = "";
@@ -118,42 +118,42 @@ symbol getToken(char*& text, symbol& curr_symbol) {
                 tmp += *text;
                 text++;
             }
-            curr_symbol.tok = Token::Number;
-            curr_symbol.number_value = atoi(tmp.c_str());
-            return curr_symbol;
+            curr_Symbol.tok = Token::Number;
+            curr_Symbol.number_value = atoi(tmp.c_str());
+            return curr_Symbol;
             
         }
         cerr << "Invalid token" << endl;
         exit(1);
-        //curr_symbol.tok = Token::Invalid;
-        return curr_symbol;
+        //curr_Symbol.tok = Token::Invalid;
+        return curr_Symbol;
     }
-    curr_symbol.tok = Token::End;
-    return curr_symbol;
+    curr_Symbol.tok = Token::End;
+    return curr_Symbol;
 }
 
 
 int main(int argc, char* argv[]) {
     
-    char* text; // выражение считанное из командной строки
+    const char* text; // выражение считанное из командной строки
 
     
     //проверяем кол-во параметров командной строки
     switch(argc) {
         case 1:
             cerr << "Not enough paramenters" << endl;
-            exit(1);
+            return(1);
             break;
         case 2:
             text = argv[1];
             break;
         default:
             cerr << "To many parameters" << endl;
-            exit(1);
+            return(1);
             break;
     }
     //производим вычисление
-    cout << sumsub(text);
+    cout << Calc(text);
     
     return 0;
 }
