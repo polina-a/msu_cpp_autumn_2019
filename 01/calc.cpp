@@ -14,7 +14,7 @@ enum Token {
     Mul = '*',
     Div = '/',
     Number,
-    End
+    End,
 };
 
 //лексема состоит из двух частей: значения, определяющего вид лексемы tok,
@@ -70,7 +70,8 @@ double MulDiv(const char*& text, Symbol& curr_Symbol) {
                 d = Init(text, curr_Symbol);
                 if (d == 0) {
                     cerr << "zero division" << endl;
-                    exit(1);
+                    cout << "zero division" << endl;
+                    return 1;
                 }
                 left /= d;
                 break;
@@ -90,10 +91,11 @@ double Init(const char*& text, Symbol& curr_Symbol) {
             getToken(text, curr_Symbol);
             return -Init(text,curr_Symbol);
         case Token::End:
+        
             return 1;
         default:
             cout << "Original needed" << endl;
-            exit(1);
+            return 1;
             break;
     }
     return 1;
@@ -124,8 +126,7 @@ Symbol getToken(const char*& text, Symbol& curr_Symbol) {
             
         }
         cerr << "Invalid token" << endl;
-        exit(1);
-        //curr_Symbol.tok = Token::Invalid;
+        curr_Symbol.tok = Token::Invalid;
         return curr_Symbol;
     }
     curr_Symbol.tok = Token::End;
@@ -142,14 +143,14 @@ int main(int argc, char* argv[]) {
     switch(argc) {
         case 1:
             cerr << "Not enough paramenters" << endl;
-            return(1);
+            return 1;
             break;
         case 2:
             text = argv[1];
             break;
         default:
             cerr << "To many parameters" << endl;
-            return(1);
+            return 1;
             break;
     }
     //производим вычисление
