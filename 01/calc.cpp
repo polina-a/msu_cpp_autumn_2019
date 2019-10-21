@@ -69,8 +69,7 @@ double MulDiv(const char*& text, Symbol& curr_Symbol) {
                 getToken(text, curr_Symbol);
                 d = Init(text, curr_Symbol);
                 if (d == 0) {
-                    cerr << "zero division" << endl;
-                    cout << "zero division" << endl;
+                    throw runtime_error("Zero division");
                     return 1;
                 }
                 left /= d;
@@ -94,7 +93,6 @@ double Init(const char*& text, Symbol& curr_Symbol) {
         
             return 1;
         default:
-            cout << "Original needed" << endl;
             return 1;
             break;
     }
@@ -125,8 +123,9 @@ Symbol getToken(const char*& text, Symbol& curr_Symbol) {
             return curr_Symbol;
             
         }
-        cerr << "Invalid token" << endl;
+       
         curr_Symbol.tok = Token::Invalid;
+        throw runtime_error("Invalid token");
         return curr_Symbol;
     }
     curr_Symbol.tok = Token::End;
@@ -149,12 +148,20 @@ int main(int argc, char* argv[]) {
             text = argv[1];
             break;
         default:
-            cerr << "To many parameters" << endl;
+            cerr << "Too many parameters" << endl;
             return 1;
             break;
     }
-    //производим вычисление
-    cout << Calc(text);
     
+    //производим вычисление
+    try
+    {
+    cout<<Calc(text);
+    }
+    catch(runtime_error& e) 
+    {
+        cerr<<e.what()<<endl;
+        return 1;
+    };
     return 0;
 }
