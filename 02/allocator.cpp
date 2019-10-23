@@ -5,6 +5,7 @@
 После вызова reset аллокатор позволяет использовать свою память снова.*/
 #include <cstdlib>
 #include <iostream>
+#include <string.h>
  using namespace std;
 
 class LinearAllocator
@@ -28,15 +29,23 @@ public:
 LinearAllocator::LinearAllocator(size_t maxSize){
     MaxSize = maxSize;
     start = (char*) malloc(sizeof(char) * maxSize);
+     if (start == nullptr) {
+        throw runtime_error("start == nullprt!!!");
+    }
     current = start;
     Size = 0;
 }
 
 char* LinearAllocator::alloc(size_t size){
 
+        if (start == nullptr) {
+        throw runtime_error("start == nullprt!!!");
+        return nullptr;
+    }
+
     if (size+Size>MaxSize){ 
-    cout<<"requested size is larger than MaxSize"<<endl;    
-    return NULL;
+    throw runtime_error("requested size is larger than MaxSize"); 
+    return nullptr;
     }
 
     *current +=size;
@@ -71,16 +80,10 @@ LinearAllocator::~LinearAllocator(){
 }
 
 int main(){
-
+    try{
     LinearAllocator Allocator(15);
     Allocator.alloc_state();
     char* a  = Allocator.alloc(7) ;
-    Allocator.alloc_state();
-    
-    //попытаемся запросить больше памяти, чем осталось 
-    a = Allocator.alloc(Allocator.maxsize()-Allocator.currentsize() +1);
-    cout<<"let's check that a is NULL now (1 for True, 0 for False):"<<endl;
-    cout<<(a==NULL)<<endl;
     Allocator.alloc_state();
     a = Allocator.alloc(5);
     Allocator.alloc_state();
@@ -99,6 +102,16 @@ int main(){
         cout<<"for i  = "<<i<<" a = "<< *(a+i) << endl; 
     }
     Allocator.alloc_state();
+    a  = Allocator.alloc(7) ;
+    Allocator.alloc_state();
+    
+    //попытаемся запросить больше памяти, чем осталось 
+    a = Allocator.alloc(Allocator.maxsize()-Allocator.currentsize() +1);
+    }
+    catch(runtime_error& e ){
+        cerr<<e.what()<<endl;
+        
+    }
     return 0;
 
 }
