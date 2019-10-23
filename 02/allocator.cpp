@@ -5,7 +5,7 @@
 После вызова reset аллокатор позволяет использовать свою память снова.*/
 #include <cstdlib>
 #include <iostream>
-#include <string.h>
+
  using namespace std;
 
 class LinearAllocator
