@@ -109,8 +109,8 @@ int main(){
     a = Allocator.alloc(Allocator.maxsize()-Allocator.currentsize() +1);
     }
     catch(runtime_error& e ){
-        cerr<<e.what()<<endl;
-        
+        cerr<<"ERROR: "<<e.what()<<endl;
+        return 1;
     }
     return 0;
 
