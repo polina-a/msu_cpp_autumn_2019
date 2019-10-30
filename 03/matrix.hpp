@@ -14,7 +14,6 @@ throw std::out_of_range("")*/
 #pragma once
 
 #include <iostream>
-#include <vector>
 
 using namespace std;
 
