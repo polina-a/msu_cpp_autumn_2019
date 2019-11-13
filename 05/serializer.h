@@ -8,7 +8,7 @@
 
 enum class Error
 {
-	NoError,
+    NoError,
 	CorruptedArchive
 };
 
@@ -30,18 +30,18 @@ public:
 	template <class... ArgsT>
 	Error operator()(ArgsT&&... args)
 	{
-		return process(args...);
+		return process(std::forward<ArgsT>(args)...);
 	}
 	
 private:
 	std::ostream& out_;
-	Error process()
-	{
+
+
+	Error process(){
 		return Error::NoError;
 	}
 	
-	Error process(bool value)
-	{
+	Error process(bool value){
 		if(value)
 			out_ << "true" << Separator;
 		else
@@ -50,17 +50,17 @@ private:
 	}
 
 
-	Error process(uint64_t value)
-	{
+	Error process(uint64_t value){
+
 		out_ << value << Separator;
 		return Error::NoError;
 	}
 
 
 	template <class T, class... Args>
-	Error process(T&& value, Args&&... args)
-	{ 	
-		if(!(process(value) == Error::NoError))
+	Error process(T&& value, Args&&... args){ 	
+
+		if (process(value) == Error::CorruptedArchive)
             return Error::CorruptedArchive;
 		else
 			return process(std::forward<Args>(args)...);
@@ -77,21 +77,22 @@ public:
 	}
 
 	template <class T>
-	Error load(T& object)
-	{
+	Error load(T& object){
+
 		return object.serialize(*this);
 	}
 
 	template <class... ArgsT>
-	Error operator()(ArgsT&&... args)
-	{
-		return process(args...);
+	Error operator()(ArgsT&&... args){
+
+		return process(std::forward<ArgsT>(args)...);
 	}
 	
 private:
 	std::istream& in_;
-	Error process(bool& value)
-	{
+
+	Error process(bool& value){
+
 		std::string text;
 		in_ >> text;
 		if (text == "true")
@@ -104,17 +105,15 @@ private:
 		return Error::NoError;
 	}
 	
-	Error process()
-	{
+	Error process(){
+
 		return Error::NoError;
 	}
 	
-	Error process(uint64_t& value)
-	{
+	Error process(uint64_t& value){
+
 		std::string text;
 		in_ >> text;
-
-	
 		if(!isdigit(text[0]))
 			return Error::CorruptedArchive;
 		value = std::stoull(text.c_str());
@@ -122,9 +121,9 @@ private:
 	}
 
 	template <class T, class... Args>
-	Error process(T&& value, Args&&... args)
-	{
-		if(process(value) == Error::NoError)
+	Error process(T&& value, Args&&... args){
+
+		if (process(value) == Error::NoError)
 			return process(std::forward<Args>(args)...);
 		else
 			return Error::CorruptedArchive;
