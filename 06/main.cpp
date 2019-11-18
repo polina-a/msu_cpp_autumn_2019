@@ -18,29 +18,34 @@ int main(){
 
     try {
         text = format("some{}text");
-    } catch (runtime_error& e) {
+    }
+     catch (runtime_error& e) {
         cout<<e.what() <<endl;
     }
     try {
         text = format("{0}+{2}-{3} = -2", "seven", "one", "ten");
-    } catch (runtime_error& e) {
+    } 
+    catch (runtime_error& e) {
         cout<< e.what()<<endl;
     }
     
     try {
         text = format("} - {0} +{1} = three", 1, "two");
-    } catch (runtime_error& e) {
+    } 
+    catch (runtime_error& e) {
         cout<< e.what() <<endl;
     }
     try {
         text = format("some {0} text {{", "number", 0);
-    } catch (runtime_error& e) {
+    } 
+    catch (runtime_error& e) {
         cout<< e.what()<<endl;
     }
 
      try {
         text = format("{0}+{1}-{2}+{3} = -2", "seven", "one", "ten");
-    } catch (runtime_error& e) {
+    } 
+    catch (runtime_error& e) {
         cout<< e.what()<<endl;
     }
      return 0;
