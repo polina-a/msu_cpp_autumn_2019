@@ -22,7 +22,7 @@ public:
 
 	explicit Vector(size_type n = 0) : size_(n)
 	{
-		if (n > 0) { s
+		if (n > 0) { 
 			capacity_ = n;
 		}
 		data_ = allocate_.allocate(capacity_);
@@ -82,7 +82,8 @@ public:
 		return data_[n];
 	}
 
-	const ref_t operator[] (size_type n) const {
+	
+	ref_t operator[] (size_type n) const {
 		if (n >= size_)
 			throw std::out_of_range("Out of range");
 		return data_[n];
