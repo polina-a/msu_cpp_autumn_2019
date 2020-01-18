@@ -63,8 +63,8 @@ public:
 private:
     using Task = std::function<void ()>;
     std::atomic<bool> working;
-	std::queue<Task> taskQueue;
+    std::queue<Task> taskQueue;
     std::condition_variable var;
-	std::vector<std::thread> all_threads;
-	std::mutex m;    
+    std::vector<std::thread> all_threads;
+    std::mutex m;    
 };
