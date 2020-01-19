@@ -8,7 +8,7 @@
 
 using namespace std;
 
-constexpr size_t CHUNK_SIZE = 1024 * 1016;
+constexpr size_t CHUNK_SIZE = 1024 * 1024;
 
 void bin_file_sort()
 {
